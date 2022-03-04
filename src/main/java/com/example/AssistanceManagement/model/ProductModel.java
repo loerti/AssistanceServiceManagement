@@ -28,6 +28,4 @@ public class ProductModel {
     @Setter
     private LocalDateTime warrantyExpiryDate;
 
-    // TODO One to many relation between product and file
-
 }

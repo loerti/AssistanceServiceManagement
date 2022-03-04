@@ -1,5 +1,6 @@
 package com.example.AssistanceManagement.service;
 
+import com.example.AssistanceManagement.model.Enums.Classification;
 import com.example.AssistanceManagement.model.Enums.Status;
 import com.example.AssistanceManagement.model.ProductModel;
 import com.example.AssistanceManagement.model.RepairSheetModel;
@@ -10,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class RepairSheetService {
@@ -29,68 +27,38 @@ public class RepairSheetService {
     @Autowired
     ProductService productService;
 
-
     public List<RepairSheetModel> getRepairSheets() {
         LOGGER.error("The repair Sheet Runs");
         return repairSheetRepository.findAll();
     }
 
-    public List<ProductModel> getRepairedProducts() {
-
-        List<ProductModel> repairedProductModelList = new ArrayList<>();
-
-        for (RepairSheetModel repairSheetModel : getRepairSheets()) {
-            if (repairSheetModel.getDateCreated().isAfter(startDate) && repairSheetModel.getDateCreated().isBefore(endDate)) {
-                if (repairSheetModel.getRepairStatus().equals(Status.Completed)) {
-                    repairedProductModelList.add(repairSheetModel.getProductModel());
-                }
-            }
-        }
-        return repairedProductModelList;
+    public List<ProductModel> getRepairedResults(){
+        return repairSheetRepository.getRepairSheetModelsByDateCreatedBetweenAndRepairStatus(startDate,endDate,Status.Completed);
     }
 
-//    public List<RepairSheetModel> getRepairedProducts(){
-//        return repairSheetRepository.findRepairSheetModelByDateCreatedBetweenAndRepairStatus(startDate,endDate,Status.Completed);
-//    }
-
-    public List<ProductModel> getRejectedProducts() {
-
-        List<ProductModel> rejectedProductModelList = new ArrayList<>();
-
-        for (RepairSheetModel repairSheetModel : getRepairSheets()) {
-            if (repairSheetModel.getDateCreated().isAfter(startDate) &&
-                    repairSheetModel.getDateCreated().isBefore(endDate)) {
-                if (repairSheetModel.getRepairStatus().equals(Status.Rejected)) {
-                    rejectedProductModelList.add(repairSheetModel.getProductModel());
-                }
-            }
-        }
-        return rejectedProductModelList;
+    public List<ProductModel> getFailedResults(){
+        return repairSheetRepository.getRepairSheetModelsByDateCreatedBetweenAndRepairStatus(startDate,endDate,Status.Rejected);
     }
 
-    public Map<Integer, Double> getProductsPrice() {
-
-        Map<Integer, Double> prices = new HashMap<>();
-        // If the product warranty is not expired set the price to 0
-        for (RepairSheetModel repairSheetModel : getRepairSheets()) {
-            if (repairSheetModel.getDateCreated().isAfter(startDate) &&
-                    repairSheetModel.getDateCreated().isBefore(endDate)) {
-                prices.put(repairSheetModel.getProductModel().getProductSerialNumber(), repairSheetModel.getPrice());
-            }
-        }
-        return prices;
-
+    public List<Double> getCost(){
+        updatePrice(repairSheetRepository);
+        return repairSheetRepository.getRepairSheetModelsPriceByDateCreatedBetween(startDate,endDate);
     }
 
-//    void updatePrice(RepairSheetRepository repairSheetRepository) {
-//        List<RepairSheetModel> repairSheetModelList = repairSheetRepository.findAll();
-//
-//        for (RepairSheetModel repairSheetModel : repairSheetModelList) {
-//            if (repairSheetModel.getProductModel().getWarrantyExpiryDate().isAfter(repairSheetModel.getDateCreated())) {
-//                repairSheetModel.setPrice(0.0);
-//            }
-//        }
-//    }
+    public List getTechnicians(){
+        return repairSheetRepository.getRepairSheetModelsByDateCreatedBetweenAndPersonnelModelIs(startDate,endDate,Classification.Technician);
+    }
 
+
+    // TODO fix the update price bug. It doesn't set to 0 the prices that are within warranty
+    void updatePrice(RepairSheetRepository repairSheetRepository) {
+        List<RepairSheetModel> repairSheetModelList = repairSheetRepository.findAll();
+
+        for (RepairSheetModel repairSheetModel : repairSheetModelList) {
+            if (repairSheetModel.getProductModel().getWarrantyExpiryDate().isAfter(repairSheetModel.getDateCreated())) {
+                repairSheetModel.setPrice((double) 0);
+            }
+        }
+    }
 
 }

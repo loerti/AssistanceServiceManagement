@@ -20,7 +20,6 @@ public class WebPageModel {
     @Setter
     private String websiteUrl;
 
-
     @ManyToOne
     @JoinColumn(name = "customerId", referencedColumnName = "customerId")
     @Getter

@@ -13,9 +13,26 @@ public class ProductService {
     @Autowired
     ProductRepository productRepository;
 
-    // TODO Write CRUD operations on ProductService
-
     public Optional<ProductModel> findById(Integer id){
         return productRepository.findById(id);
     }
+
+    public ProductModel saveProduct(ProductModel productModel){
+        return productRepository.save(productModel);
+    }
+
+    public ProductModel updateProduct (ProductModel productModel) {
+        ProductModel existingProduct = productRepository.findById(productModel.getProductSerialNumber()).orElse(null);
+
+        existingProduct.setBrand(productModel.getBrand());
+        existingProduct.setDateOfPurchase(productModel.getDateOfPurchase());
+        existingProduct.setWarrantyExpiryDate(productModel.getWarrantyExpiryDate());
+        return productRepository.save(existingProduct);
+    }
+
+    public void deleteProduct(int id){
+        productRepository.deleteById(id);
+    }
+
+
 }
