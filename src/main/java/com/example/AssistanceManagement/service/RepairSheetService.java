@@ -30,13 +30,13 @@ public class RepairSheetService {
         return repairSheetRepository.findAll();
     }
 
-    public List<ProductModel> getRepairedResults(){
-        return repairSheetRepository.getRepairSheetModelsByDateCreatedBetweenAndRepairStatus(startDate,endDate,Status.Completed);
+    public List<ProductModel> getProductStatus(Status status){
+        return repairSheetRepository.getRepairSheetModelsByDateCreatedBetweenAndRepairStatus(startDate,endDate,status);
     }
 
-    public List<ProductModel> getFailedResults(){
-        return repairSheetRepository.getRepairSheetModelsByDateCreatedBetweenAndRepairStatus(startDate,endDate,Status.Rejected);
-    }
+//    public List<ProductModel> getFailedResults(){
+//        return repairSheetRepository.getRepairSheetModelsByDateCreatedBetweenAndRepairStatus(startDate,endDate,Status.Rejected);
+//    }
 
     public List<Double> getCost(){
         updatePrice(repairSheetRepository);
@@ -47,8 +47,8 @@ public class RepairSheetService {
         return repairSheetRepository.getRepairSheetModelsByDateCreatedBetweenAndPersonnelModelIs(startDate,endDate,Classification.Technician);
     }
 
-    public List searchBySomething(Integer fileID ,Integer prdId){
-        return repairSheetRepository.searchByFileIdAndAndProductModel(fileID,prdId);
+    public List searchByFileIdAndProductModel(Integer fileID ,Integer prdId){
+        return repairSheetRepository.searchByFileIdAndProductModel(fileID,prdId);
     }
 
     public Optional<RepairSheetModel> getById(Integer id){

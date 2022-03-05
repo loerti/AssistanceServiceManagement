@@ -1,5 +1,6 @@
 package com.example.AssistanceManagement.controller;
 
+import com.example.AssistanceManagement.model.Enums.Status;
 import com.example.AssistanceManagement.model.ProductModel;
 import com.example.AssistanceManagement.model.RepairSheetModel;
 import com.example.AssistanceManagement.service.RepairSheetService;
@@ -23,16 +24,16 @@ public class RepairSheetController {
         return repairSheetService.getRepairSheets();
     }
 //all sheets
-    @GetMapping("/repaired")
-    public ResponseEntity<List<ProductModel>> getRepairedProducts(){
-        List<ProductModel> productModelList=repairSheetService.getRepairedResults();
+    @GetMapping("/repaired/{status}")
+    public ResponseEntity<List<ProductModel>> getProductsStatus(@PathVariable Status status){
+        List<ProductModel> productModelList=repairSheetService.getProductStatus(status);
         return new ResponseEntity<>(productModelList, HttpStatus.OK);
     }
 
-    @GetMapping("/rejected")
-    public List<ProductModel> getFailedProducts(){
-        return repairSheetService.getFailedResults();
-    }
+//    @GetMapping("/rejected")
+//    public List<ProductModel> getFailedProducts(){
+//        return repairSheetService.getFailedResults();
+//    }
 
     @GetMapping("/prices")
     public List<Double> getPrices(){
@@ -46,7 +47,7 @@ public class RepairSheetController {
 
     @GetMapping("/getTest/{fileId}/{productId}")
     public List search(@PathVariable Integer fileId,@PathVariable Integer productId){
-        return  repairSheetService.searchBySomething(fileId,productId);
+        return  repairSheetService.searchByFileIdAndProductModel (fileId,productId);
     }
 
     @GetMapping("/{id}")
