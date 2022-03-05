@@ -28,4 +28,6 @@ public interface RepairSheetRepository extends JpaRepository<RepairSheetModel, I
             "GROUP BY r.personnelModel.personnelId")
     List getRepairSheetModelsByDateCreatedBetweenAndPersonnelModelIs(LocalDateTime startDate, LocalDateTime endDate, Classification classification);
 
+    @Query("select r.personnelModel.customerModel.customerId, r.personnelModel.customerModel.customerName, r.productModel.productSerialNumber, r.repairStatus from RepairSheetModel r where r.fileId = ?1 and r.productModel.productSerialNumber = ?2")
+    List searchByFileIdAndAndProductModel(Integer repairId, Integer productId);
 }

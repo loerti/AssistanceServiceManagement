@@ -5,6 +5,7 @@ import com.example.AssistanceManagement.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,7 +18,10 @@ public class CustomerService {
         return customerRepository.findById(id);
     }
 
-    public CustomerModel saveProduct(CustomerModel customerModel){
+    public List<CustomerModel> getAll(){
+        return customerRepository.findAll();
+    }
+    public CustomerModel saveCustomer(CustomerModel customerModel){
         return customerRepository.save(customerModel);
     }
 

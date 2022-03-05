@@ -5,6 +5,7 @@ import com.example.AssistanceManagement.repository.PersonnelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,6 +17,9 @@ public class PersonnelService {
         return personnelRepository.findById(id);
     }
 
+    public List<PersonnelModel> findAll(){
+        return personnelRepository.findAll();
+    }
     public PersonnelModel savePersonnel(PersonnelModel personnelModel){
         return personnelRepository.save(personnelModel);
     }

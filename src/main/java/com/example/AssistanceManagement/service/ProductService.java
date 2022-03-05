@@ -5,6 +5,7 @@ import com.example.AssistanceManagement.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,6 +18,9 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
+    public List<ProductModel> getAll(){
+        return productRepository.findAll();
+    }
     public ProductModel saveProduct(ProductModel productModel){
         return productRepository.save(productModel);
     }

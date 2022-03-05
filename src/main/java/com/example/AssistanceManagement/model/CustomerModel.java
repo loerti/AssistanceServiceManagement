@@ -7,7 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Costumer")
+@Table(name = "Customer")
 @NoArgsConstructor
 public class CustomerModel {
     @Id
@@ -35,7 +35,7 @@ public class CustomerModel {
     private String customerPassword;
     @Getter
     @Setter
-    private String costumerAddress;
+    private String customerAddress;
 
 
 }

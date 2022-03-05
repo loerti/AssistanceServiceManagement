@@ -4,11 +4,12 @@ import com.example.AssistanceManagement.model.ProductModel;
 import com.example.AssistanceManagement.model.RepairSheetModel;
 import com.example.AssistanceManagement.service.RepairSheetService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("repairSheet")
@@ -16,15 +17,16 @@ public class RepairSheetController {
 
     @Autowired
     RepairSheetService repairSheetService;
-
+//params end date start date and status
     @GetMapping("/allSheets")
     public List<RepairSheetModel> getRepairSheets(){
         return repairSheetService.getRepairSheets();
     }
-
+//all sheets
     @GetMapping("/repaired")
-    public List<ProductModel> getRepairedProducts(){
-        return repairSheetService.getRepairedResults();
+    public ResponseEntity<List<ProductModel>> getRepairedProducts(){
+        List<ProductModel> productModelList=repairSheetService.getRepairedResults();
+        return new ResponseEntity<>(productModelList, HttpStatus.OK);
     }
 
     @GetMapping("/rejected")
@@ -42,4 +44,28 @@ public class RepairSheetController {
         return repairSheetService.getTechnicians();
     }
 
+    @GetMapping("/getTest/{fileId}/{productId}")
+    public List search(@PathVariable Integer fileId,@PathVariable Integer productId){
+        return  repairSheetService.searchBySomething(fileId,productId);
+    }
+
+    @GetMapping("/{id}")
+    public Optional<RepairSheetModel> getById(@PathVariable Integer id){
+        return repairSheetService.getById(id);
+    }
+
+    @PostMapping("save")
+    public RepairSheetModel save(@RequestBody RepairSheetModel repairSheetModel){
+        return repairSheetService.save(repairSheetModel);
+    }
+
+    @PutMapping("update")
+    public RepairSheetModel update(@RequestBody RepairSheetModel repairSheetModel){
+        return repairSheetService.update(repairSheetModel);
+    }
+
+    @DeleteMapping("delete/{id}")
+    public void delete(@PathVariable Integer id){
+        repairSheetService.delete(id);
+    }
 }
