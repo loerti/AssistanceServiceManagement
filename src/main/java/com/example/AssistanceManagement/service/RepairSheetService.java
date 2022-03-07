@@ -1,5 +1,6 @@
 package com.example.AssistanceManagement.service;
 
+import com.example.AssistanceManagement.exceptions.RepairSheetDateException;
 import com.example.AssistanceManagement.model.Enums.Classification;
 import com.example.AssistanceManagement.model.Enums.Status;
 import com.example.AssistanceManagement.model.ProductModel;
@@ -16,9 +17,7 @@ import java.util.Optional;
 public class RepairSheetService {
 
     private static final LocalDateTime startDate = LocalDateTime.of(2022, 2, 1, 0, 0, 0);
-    private static final LocalDateTime endDate = LocalDateTime.of(2022, 4, 1, 0, 0, 0);
-
-//    private static final Logger LOGGER = LoggerFactory.getLogger(RepairSheetService.class);
+    private static final LocalDateTime endDate = LocalDateTime.of(2027, 4, 1, 0, 0, 0);
 
     @Autowired
     RepairSheetRepository repairSheetRepository;
@@ -58,8 +57,10 @@ public class RepairSheetService {
         return repairSheetRepository.findById(id);
     }
 
-    public RepairSheetModel save(RepairSheetModel repairSheetModel) {
-        return repairSheetRepository.save(repairSheetModel);
+    public RepairSheetModel save(RepairSheetModel repairSheetModel) throws RepairSheetDateException {
+        if (repairSheetModel.getDateCreated().isAfter(repairSheetModel.getProductModel().getDateOfPurchase())) {
+            return repairSheetRepository.save(repairSheetModel);
+        } else throw new RepairSheetDateException();
     }
 
     public RepairSheetModel update(RepairSheetModel repairSheetModel) {
@@ -80,7 +81,6 @@ public class RepairSheetService {
 
 
     // TODO Error Handling
-    //  a) When creating a new product make sure the file created date is not before the product date of purchase
-
+    //  a) When creating a new fileSheet make sure the file created date is not before the product date of purchase
 
 }

@@ -14,18 +14,19 @@ public class CustomerService {
     @Autowired
     CustomerRepository customerRepository;
 
-    public Optional<CustomerModel> findById(Integer id){
+    public Optional<CustomerModel> findById(Integer id) {
         return customerRepository.findById(id);
     }
 
-    public List<CustomerModel> getAll(){
+    public List<CustomerModel> getAll() {
         return customerRepository.findAll();
     }
-    public CustomerModel saveCustomer(CustomerModel customerModel){
+
+    public CustomerModel saveCustomer(CustomerModel customerModel) {
         return customerRepository.save(customerModel);
     }
 
-    public CustomerModel updateProduct (CustomerModel customerModel) {
+    public CustomerModel updateProduct(CustomerModel customerModel) {
         CustomerModel existingCustomer = customerRepository.findById(customerModel.getCustomerId()).orElse(null);
 
         existingCustomer.setCustomerEmail(customerModel.getCustomerEmail());
@@ -35,7 +36,7 @@ public class CustomerService {
         return customerRepository.save(existingCustomer);
     }
 
-    public void deleteCostumer(int id){
+    public void deleteCostumer(int id) {
         customerRepository.deleteById(id);
     }
 

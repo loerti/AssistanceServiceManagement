@@ -1,12 +1,14 @@
 package com.example.AssistanceManagement.controller;
 
+import com.example.AssistanceManagement.exceptions.RepairSheetDateException;
 import com.example.AssistanceManagement.model.Enums.Classification;
 import com.example.AssistanceManagement.model.Enums.Status;
 import com.example.AssistanceManagement.model.ProductModel;
 import com.example.AssistanceManagement.model.RepairSheetModel;
 import com.example.AssistanceManagement.service.RepairSheetService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,10 +19,12 @@ import java.util.Optional;
 @RequestMapping("repairSheet")
 public class RepairSheetController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductModel.class);
+
+
     @Autowired
     RepairSheetService repairSheetService;
 
-    //params end date start date and status
     @GetMapping("/allSheets")
     public List<RepairSheetModel> getRepairSheets() {
         return repairSheetService.getRepairSheets();
@@ -29,7 +33,7 @@ public class RepairSheetController {
     @GetMapping("/repaired/{status}")
     public ResponseEntity<List<ProductModel>> getProductsStatus(@PathVariable Status status) {
         List<ProductModel> productModelList = repairSheetService.getProductStatus(status);
-        return new ResponseEntity<>(productModelList, HttpStatus.OK);
+        return ResponseEntity.ok(productModelList);
     }
 
     @GetMapping("/prices")
@@ -53,8 +57,13 @@ public class RepairSheetController {
     }
 
     @PostMapping("save")
-    public RepairSheetModel save(@RequestBody RepairSheetModel repairSheetModel) {
-        return repairSheetService.save(repairSheetModel);
+    public ResponseEntity<RepairSheetModel> save(@RequestBody RepairSheetModel repairSheetModel) {
+        try {
+            return ResponseEntity.ok(repairSheetService.save(repairSheetModel));
+        } catch (RepairSheetDateException e) {
+            LOGGER.error(e.getMessage());
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @PutMapping("update")

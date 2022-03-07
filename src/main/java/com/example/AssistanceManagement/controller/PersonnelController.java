@@ -17,27 +17,27 @@ public class PersonnelController {
     PersonnelService personnelService;
 
     @GetMapping("personnel/{id}")
-    public ResponseEntity<Optional<PersonnelModel>> getPersonnelById(@PathVariable Integer id){
+    public ResponseEntity<Optional<PersonnelModel>> getPersonnelById(@PathVariable Integer id) {
         return ResponseEntity.ok(personnelService.findById(id));
     }
 
     @GetMapping("personnel")
-    public List<PersonnelModel> getAll(){
+    public List<PersonnelModel> getAll() {
         return personnelService.findAll();
     }
 
     @PostMapping("personnel")
-    public ResponseEntity<PersonnelModel> savePersonnel(@RequestBody PersonnelModel personnelModel){
+    public ResponseEntity<PersonnelModel> savePersonnel(@RequestBody PersonnelModel personnelModel) {
         return ResponseEntity.ok(personnelService.savePersonnel(personnelModel));
     }
 
     @DeleteMapping("personnel/{id}")
-    public void deletePersonnel(@PathVariable Integer id){
+    public void deletePersonnel(@PathVariable Integer id) {
         personnelService.deletePersonnel(id);
     }
 
     @PutMapping("personnel")
-    public ResponseEntity<PersonnelModel> updatePersonnel(@RequestBody PersonnelModel personnelModel){
+    public ResponseEntity<PersonnelModel> updatePersonnel(@RequestBody PersonnelModel personnelModel) {
         return ResponseEntity.ok(personnelService.savePersonnel(personnelModel));
     }
 }

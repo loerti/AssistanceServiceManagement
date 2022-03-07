@@ -13,18 +13,19 @@ public class PersonnelService {
     @Autowired
     PersonnelRepository personnelRepository;
 
-    public Optional<PersonnelModel> findById(Integer id){
+    public Optional<PersonnelModel> findById(Integer id) {
         return personnelRepository.findById(id);
     }
 
-    public List<PersonnelModel> findAll(){
+    public List<PersonnelModel> findAll() {
         return personnelRepository.findAll();
     }
-    public PersonnelModel savePersonnel(PersonnelModel personnelModel){
+
+    public PersonnelModel savePersonnel(PersonnelModel personnelModel) {
         return personnelRepository.save(personnelModel);
     }
 
-    public PersonnelModel updatePersonnel (PersonnelModel personnelModel) {
+    public PersonnelModel updatePersonnel(PersonnelModel personnelModel) {
         PersonnelModel existingPersonnel = personnelRepository.findById(personnelModel.getPersonnelId()).orElse(null);
 
         existingPersonnel.setPersonnelEmail(personnelModel.getPersonnelEmail());
@@ -34,7 +35,7 @@ public class PersonnelService {
         return personnelRepository.save(existingPersonnel);
     }
 
-    public void deletePersonnel(int id){
+    public void deletePersonnel(int id) {
         personnelRepository.deleteById(id);
     }
 }
