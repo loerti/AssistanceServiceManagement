@@ -26,40 +26,43 @@ public class RepairSheetService {
     @Autowired
     ProductService productService;
 
+
     public List<RepairSheetModel> getRepairSheets() {
         return repairSheetRepository.findAll();
     }
 
-    public List<ProductModel> getProductStatus(Status status){
-        return repairSheetRepository.getRepairSheetModelsByDateCreatedBetweenAndRepairStatus(startDate,endDate,status);
+    public List<ProductModel> getProductStatus(Status status) {
+        return repairSheetRepository.getRepairSheetModelsByDateCreatedBetweenAndRepairStatus(startDate, endDate, status);
     }
 
-//    public List<ProductModel> getFailedResults(){
-//        return repairSheetRepository.getRepairSheetModelsByDateCreatedBetweenAndRepairStatus(startDate,endDate,Status.Rejected);
-//    }
-
-    public List<Double> getCost(){
-        updatePrice(repairSheetRepository);
-        return repairSheetRepository.getRepairSheetModelsPriceByDateCreatedBetween(startDate,endDate);
+    public List getCost() {
+        List<RepairSheetModel> repairSheetModelList = repairSheetRepository.findAll();
+        for (RepairSheetModel repairSheetModel : repairSheetModelList) {
+            if (repairSheetModel.getProductModel().getWarrantyExpiryDate().isAfter(repairSheetModel.getDateCreated())) {
+                repairSheetModel.setPrice((double) 0);
+                repairSheetRepository.save(repairSheetModel);
+            }
+        }
+        return repairSheetRepository.getRepairSheetModelsPriceByDateCreatedBetween(startDate, endDate);
     }
 
-    public List getTechnicians(){
-        return repairSheetRepository.getRepairSheetModelsByDateCreatedBetweenAndPersonnelModelIs(startDate,endDate,Classification.Technician);
+    public List getPersonnelByClassification(Classification classification) {
+        return repairSheetRepository.getRepairSheetModelsByDateCreatedBetweenAndPersonnelModelIs(startDate, endDate, classification);
     }
 
-    public List searchByFileIdAndProductModel(Integer fileID ,Integer prdId){
-        return repairSheetRepository.searchByFileIdAndProductModel(fileID,prdId);
+    public List searchByFileIdAndProductModel(Integer fileID, Integer prdId) {
+        return repairSheetRepository.searchByFileIdAndProductModel(fileID, prdId);
     }
 
-    public Optional<RepairSheetModel> getById(Integer id){
+    public Optional<RepairSheetModel> getById(Integer id) {
         return repairSheetRepository.findById(id);
     }
 
-    public RepairSheetModel save(RepairSheetModel repairSheetModel){
+    public RepairSheetModel save(RepairSheetModel repairSheetModel) {
         return repairSheetRepository.save(repairSheetModel);
     }
 
-    public RepairSheetModel update (RepairSheetModel repairSheetModel) {
+    public RepairSheetModel update(RepairSheetModel repairSheetModel) {
         RepairSheetModel existingRepairSheet = repairSheetRepository.findById(repairSheetModel.getFileId()).orElse(null);
 
         existingRepairSheet.setPrice(repairSheetModel.getPrice());
@@ -71,22 +74,13 @@ public class RepairSheetService {
         return repairSheetRepository.save(existingRepairSheet);
     }
 
-    public void delete(int id){
+    public void delete(int id) {
         repairSheetRepository.deleteById(id);
     }
 
 
+    // TODO Error Handling
+    //  a) When creating a new product make sure the file created date is not before the product date of purchase
 
-    // TODO fix the update price bug. It doesn't set to 0 the prices that are within warranty
-    // TODO 1) Error Handling 2) show the website 3) get data in between as path parameters
-    void updatePrice(RepairSheetRepository repairSheetRepository) {
-        List<RepairSheetModel> repairSheetModelList = repairSheetRepository.findAll();
-
-        for (RepairSheetModel repairSheetModel : repairSheetModelList) {
-            if (repairSheetModel.getProductModel().getWarrantyExpiryDate().isAfter(repairSheetModel.getDateCreated())) {
-                repairSheetModel.setPrice((double) 0);
-            }
-        }
-    }
 
 }

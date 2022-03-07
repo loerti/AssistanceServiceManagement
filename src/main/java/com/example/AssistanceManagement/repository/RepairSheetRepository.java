@@ -18,9 +18,9 @@ public interface RepairSheetRepository extends JpaRepository<RepairSheetModel, I
             "where r.dateCreated between ?1 and ?2 and r.repairStatus = ?3")
     List<ProductModel> getRepairSheetModelsByDateCreatedBetweenAndRepairStatus(LocalDateTime startDate, LocalDateTime endDate, Status status);
 
-    @Query("select r.price from RepairSheetModel r " +
+    @Query("select r.fileId, r.price from RepairSheetModel r " +
             "where r.dateCreated between ?1 and ?2")
-    List<Double> getRepairSheetModelsPriceByDateCreatedBetween(LocalDateTime startDate, LocalDateTime endDate);
+    List getRepairSheetModelsPriceByDateCreatedBetween(LocalDateTime startDate, LocalDateTime endDate);
 
     @Query(value = "select r.personnelModel.personnelClassification, r.personnelModel.personnelId, r.personnelModel.personnelEmail, COUNT (r.fileId) " +
             "from RepairSheetModel r " +
