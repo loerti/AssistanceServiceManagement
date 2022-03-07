@@ -68,19 +68,11 @@ public class RepairSheetService {
 
         existingRepairSheet.setPrice(repairSheetModel.getPrice());
         existingRepairSheet.setRepairStatus(repairSheetModel.getRepairStatus());
-        existingRepairSheet.setDateCreated(repairSheetModel.getDateCreated());
-        existingRepairSheet.setPersonnelModel(repairSheetModel.getPersonnelModel());
         existingRepairSheet.setProblemDescription(repairSheetModel.getProblemDescription());
-        existingRepairSheet.setProductModel(repairSheetModel.getProductModel());
         return repairSheetRepository.save(existingRepairSheet);
     }
 
     public void delete(int id) {
         repairSheetRepository.deleteById(id);
     }
-
-
-    // TODO Error Handling
-    //  a) When creating a new fileSheet make sure the file created date is not before the product date of purchase
-
 }

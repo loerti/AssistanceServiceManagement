@@ -48,6 +48,11 @@ public class ProductController {
 
     @PutMapping("products")
     public ResponseEntity<ProductModel> updateProduct(@RequestBody ProductModel productModel) {
-        return ResponseEntity.ok(productService.updateProduct(productModel));
+        try {
+            return ResponseEntity.ok(productService.updateProduct(productModel));
+        } catch (ProductDateException e) {
+            LOGGER.error(e.getMessage());
+        }
+        return ResponseEntity.badRequest().build();
     }
 }

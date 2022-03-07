@@ -29,13 +29,16 @@ public class ProductService {
         } else throw new ProductDateException();
     }
 
-    public ProductModel updateProduct(ProductModel productModel) {
+    public ProductModel updateProduct(ProductModel productModel) throws ProductDateException {
         ProductModel existingProduct = productRepository.findById(productModel.getProductSerialNumber()).orElse(null);
 
-        existingProduct.setBrand(productModel.getBrand());
-        existingProduct.setDateOfPurchase(productModel.getDateOfPurchase());
-        existingProduct.setWarrantyExpiryDate(productModel.getWarrantyExpiryDate());
-        return productRepository.save(existingProduct);
+        if (productModel.getWarrantyExpiryDate().isAfter(productModel.getDateOfPurchase())) {
+            existingProduct.setBrand(productModel.getBrand());
+            existingProduct.setDateOfPurchase(productModel.getDateOfPurchase());
+            existingProduct.setWarrantyExpiryDate(productModel.getWarrantyExpiryDate());
+            return productRepository.save(existingProduct);
+        } else throw new ProductDateException();
+
     }
 
     public void deleteProduct(int id) {
