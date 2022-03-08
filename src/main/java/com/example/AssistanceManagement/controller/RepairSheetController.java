@@ -19,8 +19,7 @@ import java.util.Optional;
 @RequestMapping("repairSheet")
 public class RepairSheetController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProductModel.class);
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(RepairSheetModel.class);
 
     @Autowired
     RepairSheetService repairSheetService;
